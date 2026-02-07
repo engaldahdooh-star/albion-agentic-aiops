@@ -1,0 +1,46 @@
+
+```bash
+hostname MAIN-CAMPUS-RTR
+
+! Interfaces
+interface GigabitEthernet0/0
+ description Link to Core Switch
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+
+interface Serial0/2/0
+ description Link to Branch Router
+ ip address 10.10.10.1 255.255.255.252
+ clock rate 64000
+ no shutdown
+
+interface GigabitEthernet0/1
+ description Link to Cloud
+ ip address 20.0.0.2 255.255.255.0
+ no shutdown
+
+! DHCP for Building A VLANs
+ip dhcp pool VLAN10_ADMIN
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1
+ dns-server 8.8.8.8
+
+ip dhcp pool VLAN20_FINANCE
+ network 192.168.2.0 255.255.255.0
+ default-router 192.168.2.1
+ dns-server 8.8.8.8
+
+ip dhcp pool VLAN30_BUSINESS
+ network 192.168.3.0 255.255.255.0
+ default-router 192.168.3.1
+ dns-server 8.8.8.8
+
+! RIPv2
+router rip
+ version 2
+ no auto-summary
+ network 10.10.10.0
+ network 192.168.0.0
+
+! Static route to email server
+ip route 20.0.0.0 255.255.255.0 20.0.0.1

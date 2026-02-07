@@ -1,0 +1,17 @@
+hostname BRANCH-RTR
+
+interface Serial0/1/0
+ description Link to Main Campus
+ ip address 10.10.10.2 255.255.255.252
+ no shutdown
+
+interface GigabitEthernet0/0
+ description Branch LAN
+ ip address 192.168.90.1 255.255.255.0
+ no shutdown
+
+router rip
+ version 2
+ no auto-summary
+ network 10.10.10.0
+ network 192.168.90.0

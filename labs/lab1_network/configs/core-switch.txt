@@ -1,0 +1,45 @@
+hostname CORE-SW
+
+ip routing
+
+vlan 10
+ name ADMIN
+
+vlan 20
+ name FINANCE
+
+vlan 30
+ name BUSINESS
+
+vlan 50
+ name ENG_COMP
+
+vlan 60
+ name ART_DESIGN
+
+vlan 70
+ name STUDENT_LAB
+
+vlan 80
+ name IT_SERVERS
+
+interface vlan 10
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+
+interface vlan 20
+ ip address 192.168.2.1 255.255.255.0
+ no shutdown
+
+interface vlan 30
+ ip address 192.168.3.1 255.255.255.0
+ no shutdown
+
+interface vlan 80
+ ip address 192.168.8.1 255.255.255.0
+ no shutdown
+
+! Trunk to access switches
+interface GigabitEthernet1/0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
