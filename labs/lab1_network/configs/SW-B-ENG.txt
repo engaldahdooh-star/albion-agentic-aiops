@@ -1,0 +1,24 @@
+hostname SW-B-ENG
+
+! --- VLAN Definition ---
+vlan 50
+ name ENG_COMP
+
+! --- Access Ports (Engineering Labs) ---
+interface range FastEthernet0/1 - 24
+ description ENGINEERING_LAB_ACCESS
+ switchport mode access
+ switchport access vlan 50
+ 
+ ! Loop Prevention (Crucial for lab environments)
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ 
+ ! Higher storm control limit for data-heavy engineering apps
+ storm-control broadcast level 20.00
+ no shutdown
+
+! --- Uplink ---
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk

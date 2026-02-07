@@ -1,0 +1,21 @@
+hostname CLOUD-RTR
+
+! --- Interface to Albion University ---
+! This connects to the Main Campus Router G0/1
+interface GigabitEthernet0/0
+ description CONNECTION_TO_ALBION_UNI
+ ip address 20.0.0.2 255.255.255.252
+ no shutdown
+
+! --- Interface to the Email Server ---
+! This represents the internal cloud network where the server lives
+interface GigabitEthernet0/1
+ description CLOUD_DATA_CENTER_LAN
+ ip address 200.200.200.1 255.255.255.0
+ no shutdown
+
+! --- Routing back to the University ---
+! The cloud router needs to know how to send traffic back to Albion's IPs
+! We use a static route pointing to the Main Campus Router
+ip route 192.168.0.0 255.255.0.0 20.0.0.1
+ip route 10.10.10.0 255.255.255.0 20.0.0.1

@@ -1,0 +1,29 @@
+hostname SW-C-LABS
+
+! --- VLAN Definition ---
+vlan 70
+ name STUDENT_LABS
+
+! --- Access Ports (Lab Workstations) ---
+interface range FastEthernet0/1 - 24
+ description STUDENT_PC_ACCESS
+ switchport mode access
+ switchport access vlan 70
+ 
+ ! Security: Allow only 2 MAC addresses per port (PC + Lab Equipment)
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation shutdown
+ 
+ ! Loop Prevention (Crucial for students plugging in mini-switches)
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ 
+ ! Broadcast control to prevent "chatter" from lab experiments
+ storm-control broadcast level 5.00
+ no shutdown
+
+! --- Uplink ---
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk

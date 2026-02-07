@@ -1,45 +1,68 @@
-hostname CORE-SW
+hostname CORE-L3-SW
 
+! --- Enable Layer 3 Routing ---
 ip routing
 
+! --- VLAN Database (All Campus VLANs) ---
 vlan 10
- name ADMIN
-
+ name ADMIN_MGMT
 vlan 20
- name FINANCE
-
+ name ADMIN_HR
 vlan 30
+ name FINANCE
+vlan 40
  name BUSINESS
-
 vlan 50
  name ENG_COMP
-
 vlan 60
  name ART_DESIGN
-
 vlan 70
- name STUDENT_LAB
-
+ name STUDENT_LABS
 vlan 80
- name IT_SERVERS
+ name IT_AND_SERVERS
 
-interface vlan 10
- ip address 192.168.1.1 255.255.255.0
- no shutdown
+! --- Layer 3 Interfaces (Gateways for Buildings A, B, and C) ---
+interface Vlan10
+ ip address 192.168.10.1 255.255.255.0
+interface Vlan20
+ ip address 192.168.20.1 255.255.255.0
+interface Vlan30
+ ip address 192.168.30.1 255.255.255.0
+interface Vlan40
+ ip address 192.168.40.1 255.255.255.0
+interface Vlan50
+ ip address 192.168.50.1 255.255.255.0
+interface Vlan60
+ ip address 192.168.60.1 255.255.255.0
+interface Vlan70
+ ip address 192.168.70.1 255.255.255.0
+interface Vlan80
+ ip address 192.168.80.1 255.255.255.0
 
-interface vlan 20
- ip address 192.168.2.1 255.255.255.0
- no shutdown
+! --- Physical Uplink to Main Campus Router ---
+interface GigabitEthernet1/1/1
+ description UPLINK_TO_MCR_G0/0
+ no switchport
+ ip address 10.10.10.2 255.255.255.252
 
-interface vlan 30
- ip address 192.168.3.1 255.255.255.0
- no shutdown
-
-interface vlan 80
- ip address 192.168.8.1 255.255.255.0
- no shutdown
-
-! Trunk to access switches
-interface GigabitEthernet1/0/1
+! --- Trunk Ports to Access Switches (Examples) ---
+interface range GigabitEthernet1/0/1 - 8
+ description TRUNKS_TO_BUILDING_A_B_C_SWITCHES
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ! Pruning unnecessary VLANs (e.g., Branch VLANs 90/100 don't belong here)
+ switchport trunk allowed vlan 10-80
+
+! --- Routing Protocol (RIPv2) ---
+router rip
+ version 2
+ network 192.168.10.0
+ network 192.168.20.0
+ network 192.168.30.0
+ network 192.168.40.0
+ network 192.168.50.0
+ network 192.168.60.0
+ network 192.168.70.0
+ network 192.168.80.0
+ network 10.10.10.0
+ no auto-summary

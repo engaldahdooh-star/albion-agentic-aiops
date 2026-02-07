@@ -1,0 +1,49 @@
+hostname SW-BRANCH-STAFF
+
+! -------------------------
+! VLAN Configuration
+! -------------------------
+vlan 90
+ name HEALTH_STAFF
+
+! -------------------------
+! Floor 1: Staff Offices (VLAN 90)
+! -------------------------
+interface range FastEthernet0/1 - 12
+ description STAFF_WORKSTATIONS
+ switchport mode access
+ switchport access vlan 90
+ 
+ ! Security: Ensure only authorized staff PCs connect
+ switchport port-security
+ switchport port-security mac-address sticky
+ 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+
+! -------------------------
+! Floor 2: Student Labs (VLAN 100)
+! -------------------------
+interface range FastEthernet0/13 - 24
+ description STUDENT_LAB_PCS
+ switchport mode access
+ switchport access vlan 100
+ 
+ ! Security: Higher churn in labs, allow 2 MACs for flexibility
+ switchport port-security maximum 2
+ switchport port-security violation shutdown
+ 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+
+! -------------------------
+! Uplink to Branch Router
+! -------------------------
+interface GigabitEthernet0/1
+ description TRUNK_TO_BRANCH_RTR
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ ! Only pass the branch-specific VLANs
+ switchport trunk allowed vlan 90,100

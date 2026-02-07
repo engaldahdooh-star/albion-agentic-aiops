@@ -1,0 +1,16 @@
+hostname SW-A-ADMIN-SECURE
+vlan 20
+ name ADMIN_HR
+
+!
+interface range Fa0/1 - 12
+ description HR_DEPT
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security mac-address sticky
+
+
+!
+interface Gig0/1
+ switchport mode trunk

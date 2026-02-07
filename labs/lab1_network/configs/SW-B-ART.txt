@@ -1,0 +1,23 @@
+hostname SW-B-ART
+
+! --- VLAN Definition ---
+vlan 60
+ name ART_DESIGN
+
+! --- Access Ports (Design Studios) ---
+interface range FastEthernet0/1 - 24
+ description ART_STUDIO_ACCESS
+ switchport mode access
+ switchport access vlan 60
+ 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ 
+ ! Standard storm control
+ storm-control broadcast level 10.00
+ no shutdown
+
+! --- Uplink ---
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk

@@ -1,0 +1,49 @@
+hostname SW-A-FINANCE
+
+! ---------------------------------------------------------
+! VLAN Definition (Single Purpose)
+! ---------------------------------------------------------
+vlan 30
+ name FINANCE
+
+! ---------------------------------------------------------
+! Global Security
+! ---------------------------------------------------------
+ip dhcp snooping
+ip dhcp snooping vlan 30
+
+! ---------------------------------------------------------
+! Finance Access Ports (All 24 Ports)
+! ---------------------------------------------------------
+interface range FastEthernet0/1 - 24
+ description FINANCE_PC_ONLY
+ switchport mode access
+ switchport access vlan 30
+ 
+ ! Port Security: Strict 1-to-1 mapping
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ 
+ ! Loop Prevention
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ 
+ ! Traffic Control
+ storm-control broadcast level 5.00
+ no shutdown
+
+! ---------------------------------------------------------
+! Uplink to Core Switch
+! ---------------------------------------------------------
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk
+ ip dhcp snooping trust
+
+! ---------------------------------------------------------
+! Unused Ports (Gigabit 2 and any expansion slots)
+! ---------------------------------------------------------
+interface GigabitEthernet0/2
+ shutdown

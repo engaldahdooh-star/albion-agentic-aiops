@@ -1,0 +1,44 @@
+hostname SW-A-BUS
+
+! ---------------------------------------------------------
+! VLAN Definition
+! ---------------------------------------------------------
+vlan 40
+ name BUSINESS
+
+! ---------------------------------------------------------
+! Global Security
+! ---------------------------------------------------------
+ip dhcp snooping
+ip dhcp snooping vlan 40
+
+! ---------------------------------------------------------
+! Business Access Ports (Ports 1 to 24)
+! ---------------------------------------------------------
+interface range FastEthernet0/1 - 24
+ description BUSINESS_STUDENT_LAB_ACCESS
+ switchport mode access
+ switchport access vlan 40
+ 
+ ! Basic Security: Prevent unauthorized switches/loops
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ 
+ ! Limit broadcast traffic to keep the network stable
+ storm-control broadcast level 10.00
+ no shutdown
+
+! ---------------------------------------------------------
+! Uplink to Core Switch
+! ---------------------------------------------------------
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk
+ ! Trusting the Core Switch for DHCP IP assignments
+ ip dhcp snooping trust
+
+! ---------------------------------------------------------
+! Housekeeping
+! ---------------------------------------------------------
+interface range FastEthernet0/25 - 48
+ shutdown

@@ -1,0 +1,39 @@
+hostname BR-CORE-L3
+
+! --- Enable Layer 3 Routing ---
+ip routing
+
+! --- Branch VLANs ---
+vlan 90
+ name HEALTH_STAFF
+vlan 100
+ name HEALTH_STUDENTS
+
+! --- Layer 3 Gateways (SVI) ---
+! These act as the Default Gateway for the Branch
+interface Vlan90
+ ip address 192.168.90.1 255.255.255.0
+
+interface Vlan100
+ ip address 192.168.100.1 255.255.255.0
+
+! --- Uplink to Branch Router ---
+interface GigabitEthernet1/1/1
+ description UPLINK_TO_BRANCH_RTR
+ no switchport
+ ip address 10.10.20.2 255.255.255.252
+
+! --- Downlinks to Access Switches ---
+interface range GigabitEthernet1/0/1 - 2
+ description TRUNKS_TO_BRANCH_ACCESS_SWITCHES
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 90,100
+
+! --- Routing to Main Campus ---
+router rip
+ version 2
+ network 192.168.90.0
+ network 192.168.100.0
+ network 10.10.20.0
+ no auto-summary

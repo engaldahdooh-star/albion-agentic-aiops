@@ -1,0 +1,27 @@
+hostname SW-C-IT
+
+! --- VLAN Definition ---
+vlan 80
+ name IT_AND_SERVERS
+
+! --- Server Ports (IT Department) ---
+interface range FastEthernet0/1 - 24
+ description UNIVERSITY_SERVERS_AND_AIOPS_NODES
+ switchport mode access
+ switchport access vlan 80
+ 
+ ! Servers don't move, so we use sticky MACs for high security
+ switchport port-security
+ switchport port-security mac-address sticky
+ 
+ ! We disable Portfast for servers to ensure clean STP transitions 
+ ! unless the server is single-homed and requires fast boot.
+ spanning-tree portfast
+ no shutdown
+
+! --- Uplink ---
+interface GigabitEthernet0/1
+ description UPLINK_TO_CORE_L3
+ switchport mode trunk
+ ! Trusting this port for DHCP as the Main Router is the DHCP source
+ ip dhcp snooping trust
