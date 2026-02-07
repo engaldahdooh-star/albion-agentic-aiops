@@ -33,16 +33,16 @@ This project simulates:
 
 ---
 
-## Lab Structure
+## Design Structure
 
-| Lab | Focus |
+| Stage | Focus |
 |-----|------|
-| Lab 1 | Network topology & device configuration |
-| Lab 2 | Kafka + Spark streaming pipeline |
-| Lab 3 | Graph-based topology reasoning agent |
-| Lab 4 | Agent decision logic, arbitration, coalition |
-| Lab 5 | Multi-region agents, reputation, drift |
-| Lab 6 | Production-grade autonomous agents |
+| Stage 1 | Network topology & device configuration |
+| Stage 2 | Kafka + Spark streaming pipeline |
+| Stage 3 | Graph-based topology reasoning agent |
+| Stage 4 | Agent decision logic, arbitration, coalition |
+| Stage 5 | Multi-region agents, reputation, drift |
+| Stage 6 | Production-grade autonomous agents |
 
 ---
 
